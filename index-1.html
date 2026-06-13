@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevCore Pro — AI Intelligence Platform for Elite Developers</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700;800&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080b0f;
+    --surface: #0d1117;
+    --surface2: #131920;
+    --border: #1e2d3d;
+    --accent: #00d4ff;
+    --accent2: #ff4d6d;
+    --accent3: #a3ff47;
+    --text: #e6edf3;
+    --muted: #7d8590;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(0, 212, 255, 0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.18s ease, width 0.2s, height 0.2s;
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* NAVBAR */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 48px;
+    border-bottom: 1px solid rgba(30, 45, 61, 0.6);
+    background: rgba(8, 11, 15, 0.85);
+    backdrop-filter: blur(20px);
+  }
+
+  .logo {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo-bracket { color: var(--muted); }
+  .logo-dot { width: 6px; height: 6px; background: var(--accent3); border-radius: 50%; display: inline-block; }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+    align-items: center;
+  }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  .nav-cta {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 10px 22px;
+    border: none;
+    cursor: none;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: background 0.2s, transform 0.15s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+  .nav-cta:hover { background: var(--accent3); transform: scale(1.03); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0, 212, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 212, 255, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 100%);
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 70%);
+    top: -100px; right: -150px;
+    pointer-events: none;
+  }
+  .hero-glow2 {
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,77,109,0.05) 0%, transparent 70%);
+    bottom: 0; left: 0;
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent3);
+    background: rgba(163, 255, 71, 0.08);
+    border: 1px solid rgba(163, 255, 71, 0.2);
+    padding: 6px 14px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    animation: fadeSlideDown 0.6s ease both;
+  }
+  .badge-pulse {
+    width: 6px; height: 6px;
+    background: var(--accent3);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  h1 {
+    font-family: var(--sans);
+    font-size: clamp(52px, 7vw, 96px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -3px;
+    margin-bottom: 28px;
+    animation: fadeSlideDown 0.7s 0.1s ease both;
+  }
+  h1 .line1 { display: block; color: var(--text); }
+  h1 .line2 {
+    display: block;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-family: var(--mono);
+    font-size: 16px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 540px;
+    margin-bottom: 48px;
+    animation: fadeSlideDown 0.7s 0.2s ease both;
+  }
+  .hero-sub span { color: var(--accent); }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    animation: fadeSlideDown 0.7s 0.3s ease both;
+  }
+
+  .btn-primary {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 16px 36px;
+    border: none;
+    cursor: none;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.4s;
+  }
+  .btn-primary:hover::after { transform: translateX(100%); }
+  .btn-primary:hover { background: var(--accent3); transform: translateY(-2px); }
+
+  .btn-outline {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    background: transparent;
+    padding: 15px 32px;
+    border: 1px solid var(--border);
+    cursor: none;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { color: var(--text); border-color: var(--accent); }
+
+  .hero-price-tag {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .hero-price-tag strong { color: var(--accent2); font-size: 15px; }
+
+  /* TERMINAL MOCKUP */
+  .hero-terminal {
+    position: absolute;
+    right: 48px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 480px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,212,255,0.1);
+    animation: fadeSlideLeft 0.8s 0.4s ease both;
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  .t-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .t-dot.red { background: #ff5f56; }
+  .t-dot.yellow { background: #ffbd2e; }
+  .t-dot.green { background: #27c93f; }
+  .terminal-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-left: auto;
+  }
+
+  .terminal-body {
+    padding: 20px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.8;
+  }
+
+  .t-line { display: flex; gap: 8px; }
+  .t-prompt { color: var(--accent3); }
+  .t-cmd { color: var(--text); }
+  .t-comment { color: var(--muted); }
+  .t-output { color: var(--accent); padding-left: 16px; }
+  .t-error { color: var(--accent2); padding-left: 16px; }
+  .t-success { color: var(--accent3); padding-left: 16px; }
+  .t-blank { height: 8px; }
+  .t-cursor {
+    display: inline-block;
+    width: 8px; height: 14px;
+    background: var(--accent);
+    animation: blink 1s infinite;
+    vertical-align: middle;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  /* STATS BAR */
+  .stats-bar {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 48px;
+    display: flex;
+    gap: 0;
+    background: var(--surface);
+    position: relative;
+    z-index: 2;
+  }
+
+  .stat-item {
+    flex: 1;
+    text-align: center;
+    padding: 0 24px;
+    border-right: 1px solid var(--border);
+  }
+  .stat-item:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: var(--mono);
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* SECTION */
+  section {
+    padding: 100px 48px;
+    position: relative;
+  }
+
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-tag::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .section-title {
+    font-family: var(--sans);
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 60px;
+    max-width: 600px;
+  }
+
+  /* FEATURES GRID */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .feature-card {
+    background: var(--surface);
+    padding: 40px 36px;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .feature-card:hover { background: var(--surface2); }
+  .feature-card:hover::before { transform: scaleX(1); }
+
+  .feature-icon {
+    font-size: 28px;
+    margin-bottom: 20px;
+    display: block;
+    filter: drop-shadow(0 0 8px currentColor);
+  }
+  .feature-title {
+    font-family: var(--sans);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+  }
+  .feature-desc {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .feature-tag {
+    display: inline-block;
+    margin-top: 16px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent3);
+    background: rgba(163, 255, 71, 0.08);
+    border: 1px solid rgba(163, 255, 71, 0.2);
+    padding: 3px 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* HOW IT WORKS */
+  .how-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .step {
+    display: flex;
+    gap: 24px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: none;
+    transition: background 0.15s;
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 700;
+    min-width: 32px;
+    padding-top: 3px;
+    letter-spacing: 0.05em;
+  }
+  .step-info h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+  .step-info p {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* CODE PANEL */
+  .code-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+  }
+  .code-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  .code-tabs {
+    display: flex;
+    gap: 0;
+    flex: 1;
+  }
+  .code-tab {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    padding: 6px 16px;
+    border-right: 1px solid var(--border);
+    cursor: none;
+    transition: color 0.2s, background 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .code-tab.active {
+    color: var(--accent);
+    background: rgba(0, 212, 255, 0.05);
+  }
+  .code-tab:hover { color: var(--text); }
+
+  .code-body {
+    padding: 24px;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.8;
+    overflow-x: auto;
+  }
+  .kw { color: #ff79c6; }
+  .fn { color: #8be9fd; }
+  .str { color: #f1fa8c; }
+  .num { color: #bd93f9; }
+  .cm { color: var(--muted); font-style: italic; }
+  .var { color: var(--accent3); }
+
+  /* PRICING */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .price-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 40px 36px;
+    position: relative;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .price-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+
+  .price-card.featured {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, var(--surface) 0%, rgba(0,212,255,0.04) 100%);
+  }
+  .price-card.featured::before {
+    content: 'MOST POPULAR';
+    position: absolute;
+    top: -1px; right: 32px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 4px 12px;
+    letter-spacing: 0.1em;
+  }
+
+  .price-tier {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 16px;
+  }
+  .price-amount {
+    font-family: var(--sans);
+    font-size: 56px;
+    font-weight: 800;
+    letter-spacing: -3px;
+    line-height: 1;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .price-amount span { color: var(--accent); font-size: 24px; vertical-align: top; padding-top: 12px; display: inline-block; }
+  .price-period {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+  .price-features {
+    list-style: none;
+    margin-bottom: 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .price-features li {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .price-features li::before {
+    content: '→';
+    color: var(--accent3);
+    flex-shrink: 0;
+  }
+  .price-features li.inactive { opacity: 0.3; }
+  .price-features li.inactive::before { content: '—'; color: var(--muted); }
+
+  .price-btn {
+    width: 100%;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 14px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    cursor: none;
+    transition: all 0.2s;
+  }
+  .price-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .price-card.featured .price-btn {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+  .price-card.featured .price-btn:hover {
+    background: var(--accent3);
+    border-color: var(--accent3);
+    color: var(--bg);
+  }
+
+  /* TOOLS */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .tool-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 28px 24px;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .tool-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .tool-icon { font-size: 24px; margin-bottom: 12px; display: block; }
+  .tool-name { font-family: var(--mono); font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+  .tool-desc { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.6; }
+  .tool-badge {
+    position: absolute;
+    top: 12px; right: 12px;
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--accent2);
+    border: 1px solid var(--accent2);
+    padding: 2px 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* TESTIMONIALS */
+  .testi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .testi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 32px 28px;
+  }
+  .testi-text {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .testi-text::before {
+    content: '"';
+    font-family: var(--sans);
+    font-size: 60px;
+    color: var(--accent);
+    opacity: 0.3;
+    position: absolute;
+    top: -16px; left: -8px;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .testi-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .testi-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--bg);
+    flex-shrink: 0;
+  }
+  .testi-name {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .testi-role {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .testi-stars { color: #ffd60a; font-size: 12px; margin-bottom: 16px; }
+
+  /* CTA SECTION */
+  .cta-section {
+    background: linear-gradient(135deg, rgba(0,212,255,0.04) 0%, rgba(255,77,109,0.04) 100%);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+    padding: 100px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .cta-section h2 {
+    font-family: var(--sans);
+    font-size: clamp(36px, 5vw, 68px);
+    font-weight: 800;
+    letter-spacing: -3px;
+    line-height: 1;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .cta-section p {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 40px;
+    position: relative;
+  }
+  .cta-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    position: relative;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 48px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--accent);
+  }
+  .footer-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  .footer-links a {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--text); }
+  .footer-copy {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeSlideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeSlideLeft {
+    from { opacity: 0; transform: translate(40px, -50%); }
+    to { opacity: 1; transform: translate(0, -50%); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+  /* LIVE FEED TICKER */
+  .ticker-wrap {
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    padding: 12px 0;
+  }
+  .ticker {
+    display: flex;
+    gap: 64px;
+    animation: ticker 30s linear infinite;
+    white-space: nowrap;
+  }
+  .ticker-item {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .ticker-item .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent3); }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* Notification toast */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--surface);
+    border: 1px solid var(--accent3);
+    padding: 16px 24px;
+    font-family: var(--mono);
+    font-size: 12px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: toastIn 0.3s ease, toastOut 0.3s 3.7s ease forwards;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  }
+  .toast-dot { width: 8px; height: 8px; background: var(--accent3); border-radius: 50%; flex-shrink: 0; }
+  @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(20px); } }
+
+  @media (max-width: 1100px) {
+    .hero-terminal { display: none; }
+    .hero-content { max-width: 100%; }
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .how-grid { grid-template-columns: 1fr; }
+    .tools-grid { grid-template-columns: repeat(2, 1fr); }
+    .testi-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; max-width: 480px; }
+    nav { padding: 18px 24px; }
+    .nav-links { display: none; }
+    section { padding: 60px 24px; }
+    .hero { padding: 100px 24px 60px; }
+    .stats-bar { padding: 24px; gap: 0; }
+    .stat-num { font-size: 24px; }
+    footer { flex-direction: column; gap: 24px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="logo">
+    <span class="logo-bracket">[</span>DevCore<span style="color:var(--accent3)">Pro</span><span class="logo-bracket">]</span>
+    <span class="logo-dot"></span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#tools">Tools</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#docs">Docs</a></li>
+  </ul>
+  <button class="nav-cta" onclick="window.open('https://vinyan.gumroad.com/l/zpllep','_blank')">Get Access →</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-pulse"></span>
+      v4.2 — Now with Zero-Day Scanner &amp; AI Code Review
+    </div>
+
+    <h1>
+      <span class="line1">The Developer</span>
+      <span class="line2">Intelligence OS</span>
+    </h1>
+
+    <p class="hero-sub">
+      One platform for <span>AI code review</span>, exploit analysis, dependency scanning, live collaboration &amp; deployment automation. Built for elite engineers who ship at speed.
+    </p>
+
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="window.open('https://vinyan.gumroad.com/l/zpllep','_blank')">Get Solo — $49/mo</button>
+      <button class="btn-outline" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">View Pricing ↓</button>
+      <div class="hero-price-tag">From <strong>$49</strong>/mo · <a href="https://vinyan.gumroad.com/l/zpllep" target="_blank" style="color:var(--accent3);text-decoration:none;">Buy now ↗</a></div>
+    </div>
+  </div>
+
+  <!-- Terminal -->
+  <div class="hero-terminal">
+    <div class="terminal-bar">
+      <div class="t-dot red"></div>
+      <div class="t-dot yellow"></div>
+      <div class="t-dot green"></div>
+      <span class="terminal-title">devcore-pro — zsh — 80×24</span>
+    </div>
+    <div class="terminal-body">
+      <div class="t-line"><span class="t-prompt">▶</span><span class="t-cmd">devcore scan --repo github.com/acme/api</span></div>
+      <div class="t-blank"></div>
+      <div class="t-output">⚡ Analyzing 3,847 files...</div>
+      <div class="t-output">✓ Dependencies: 142 packages checked</div>
+      <div class="t-error">✗ CVE-2025-1187: critical in lodash@4.17.20</div>
+      <div class="t-success">✓ Auto-patch applied → lodash@4.17.21</div>
+      <div class="t-blank"></div>
+      <div class="t-line"><span class="t-prompt">▶</span><span class="t-cmd">devcore ai-review --diff HEAD~1</span></div>
+      <div class="t-blank"></div>
+      <div class="t-output">🤖 AI Code Review (claude-sonnet-4)</div>
+      <div class="t-output">→ Logic flaw on line 247: race condition</div>
+      <div class="t-output">→ Missing input sanitization (XSS risk)</div>
+      <div class="t-success">→ 2 improvements auto-suggested</div>
+      <div class="t-blank"></div>
+      <div class="t-line"><span class="t-prompt">▶</span><span class="t-cmd">devcore deploy --env prod --gate ai<span class="t-cursor"></span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <div class="ticker-item"><span class="dot"></span> 847 vulnerabilities patched today</div>
+    <div class="ticker-item"><span class="dot"></span> AI code review saves avg 4.2 hrs/dev/week</div>
+    <div class="ticker-item"><span class="dot"></span> SOC 2 Type II certified</div>
+    <div class="ticker-item"><span class="dot"></span> 99.97% uptime SLA guaranteed</div>
+    <div class="ticker-item"><span class="dot"></span> Zero-day scanner updated 6 minutes ago</div>
+    <div class="ticker-item"><span class="dot"></span> 12,400+ teams ship faster with DevCore Pro</div>
+    <div class="ticker-item"><span class="dot"></span> FIPS 140-2 compliant encryption</div>
+    <!-- Duplicate for seamless loop -->
+    <div class="ticker-item"><span class="dot"></span> 847 vulnerabilities patched today</div>
+    <div class="ticker-item"><span class="dot"></span> AI code review saves avg 4.2 hrs/dev/week</div>
+    <div class="ticker-item"><span class="dot"></span> SOC 2 Type II certified</div>
+    <div class="ticker-item"><span class="dot"></span> 99.97% uptime SLA guaranteed</div>
+    <div class="ticker-item"><span class="dot"></span> Zero-day scanner updated 6 minutes ago</div>
+    <div class="ticker-item"><span class="dot"></span> 12,400+ teams ship faster with DevCore Pro</div>
+    <div class="ticker-item"><span class="dot"></span> FIPS 140-2 compliant encryption</div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item reveal">
+    <div class="stat-num" data-count="12400">0</div>
+    <div class="stat-label">Engineering Teams</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-num" data-count="98">0</div>
+    <div class="stat-label">Faster Vulnerability Response</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-num" data-count="4">0</div>
+    <div class="stat-label">Avg Hours Saved Per Dev/Week</div>
+  </div>
+  <div class="stat-item reveal">
+    <div class="stat-num" data-count="847">0</div>
+    <div class="stat-label">CVEs Patched Today</div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-tag">Core Capabilities</div>
+  <h2 class="section-title reveal">Everything elite devs need. One platform.</h2>
+
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <span class="feature-icon">🧠</span>
+      <div class="feature-title">AI Code Intelligence</div>
+      <p class="feature-desc">Powered by Claude Sonnet 4 — real-time code review, bug detection, logic analysis, and refactoring suggestions on every PR. Understands your entire codebase context.</p>
+      <span class="feature-tag">AI-Powered</span>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">🔍</span>
+      <div class="feature-title">Zero-Day Scanner</div>
+      <p class="feature-desc">Live CVE database with &lt;6 minute update latency. SAST + DAST scanning, dependency graph analysis, and one-click auto-patch with rollback support.</p>
+      <span class="feature-tag">Live Updates</span>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">🕵️</span>
+      <div class="feature-title">Hacker Mode</div>
+      <p class="feature-desc">Ethical exploit simulation, penetration test automation, attack surface mapping, and OWASP audit trails. Includes a Burp Suite integration layer.</p>
+      <span class="feature-tag">Pro Only</span>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">⚡</span>
+      <div class="feature-title">Smart CI/CD Gate</div>
+      <p class="feature-desc">AI-gated deployment pipelines. Blocks merges with critical issues, predicts deployment risk scores, and integrates with GitHub, GitLab, Bitbucket, and Jenkins.</p>
+      <span class="feature-tag">DevOps</span>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">🌐</span>
+      <div class="feature-title">Live Collaboration</div>
+      <p class="feature-desc">Real-time multiplayer code sessions with AI co-pilot, screen sharing, voice channels, and integrated incident runbooks. Like Figma — but for engineers.</p>
+      <span class="feature-tag">Teams</span>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">📊</span>
+      <div class="feature-title">Engineering Analytics</div>
+      <p class="feature-desc">DORA metrics, code quality trends, developer velocity dashboards, technical debt heatmaps, and executive-ready reports exported as PDF or Notion pages.</p>
+      <span class="feature-tag">Insights</span>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="section-tag">Workflow</div>
+  <h2 class="section-title reveal">From commit to production.<br>In minutes, not days.</h2>
+
+  <div class="how-grid">
+    <div class="steps reveal">
+      <div class="step">
+        <div class="step-num">01 →</div>
+        <div class="step-info">
+          <h3>Connect your repos</h3>
+          <p>OAuth into GitHub, GitLab, or Bitbucket. DevCore Pro ingests your entire codebase in minutes — no agents, no config files, no YAML hell.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02 →</div>
+        <div class="step-info">
+          <h3>AI scans every commit</h3>
+          <p>Every push triggers a full AI review: security, logic, performance, style. Issues are surfaced in your existing PR workflow as inline comments.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03 →</div>
+        <div class="step-info">
+          <h3>One-click remediations</h3>
+          <p>For 80% of issues, DevCore generates a ready-to-merge fix PR with a full explanation and rollback plan. You approve — we handle the rest.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04 →</div>
+        <div class="step-info">
+          <h3>Ship with confidence</h3>
+          <p>AI deployment gate blocks unsafe releases. Risk scores, blast radius predictions, and one-click rollback — all from your terminal or dashboard.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-panel reveal">
+      <div class="code-header">
+        <div class="code-tabs">
+          <div class="code-tab active">review.ts</div>
+          <div class="code-tab">scan.py</div>
+          <div class="code-tab">deploy.sh</div>
+        </div>
+      </div>
+      <div class="code-body">
+        <div><span class="cm">// DevCore Pro AI Review SDK</span></div>
+        <div><span class="kw">import</span> { DevCore } <span class="kw">from</span> <span class="str">'@devcore/sdk'</span></div>
+        <div>&nbsp;</div>
+        <div><span class="kw">const</span> <span class="var">dc</span> = <span class="kw">new</span> <span class="fn">DevCore</span>({</div>
+        <div>&nbsp;&nbsp;apiKey: process.env.<span class="var">DEVCORE_KEY</span>,</div>
+        <div>&nbsp;&nbsp;repo: <span class="str">'github.com/acme/api'</span>,</div>
+        <div>&nbsp;&nbsp;mode: <span class="str">'ai-strict'</span></div>
+        <div>})</div>
+        <div>&nbsp;</div>
+        <div><span class="cm">// Run full intelligence scan</span></div>
+        <div><span class="kw">const</span> <span class="var">report</span> = <span class="kw">await</span> dc.<span class="fn">scan</span>({</div>
+        <div>&nbsp;&nbsp;targets: [<span class="str">'security'</span>, <span class="str">'perf'</span>, <span class="str">'logic'</span>],</div>
+        <div>&nbsp;&nbsp;diff: <span class="str">'HEAD~1'</span>,</div>
+        <div>&nbsp;&nbsp;autoFix: <span class="num">true</span></div>
+        <div>})</div>
+        <div>&nbsp;</div>
+        <div>console.<span class="fn">log</span>(<span class="var">report</span>.issues)  <span class="cm">// ← 0 criticals</span></div>
+        <div>console.<span class="fn">log</span>(<span class="var">report</span>.riskScore) <span class="cm">// ← 3/100</span></div>
+        <div>&nbsp;</div>
+        <div><span class="cm">// Gate: deploy only if score &lt; 20</span></div>
+        <div><span class="kw">if</span> (<span class="var">report</span>.riskScore &lt; <span class="num">20</span>) {</div>
+        <div>&nbsp;&nbsp;<span class="kw">await</span> dc.<span class="fn">deploy</span>({ env: <span class="str">'prod'</span> })</div>
+        <div>}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUILT-IN TOOLS -->
+<section id="tools">
+  <div class="section-tag">Built-in Arsenal</div>
+  <h2 class="section-title reveal">40+ tools. Zero subscriptions.</h2>
+
+  <div class="tools-grid">
+    <div class="tool-card reveal">
+      <span class="tool-icon">🔐</span>
+      <div class="tool-name">Secret Detector</div>
+      <div class="tool-desc">Scans every commit for leaked API keys, tokens, passwords, and AWS credentials. Auto-revokes via integrations.</div>
+      <span class="tool-badge">Critical</span>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🐛</span>
+      <div class="tool-name">AI Debugger</div>
+      <div class="tool-desc">Paste a stack trace, get the root cause and fix in seconds. Works across 30+ languages including Rust, Go, and Solidity.</div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🗺️</span>
+      <div class="tool-name">Attack Surface Map</div>
+      <div class="tool-desc">Visual graph of your entire API surface, auth flows, and data paths. Highlights exploitable entry points instantly.</div>
+      <span class="tool-badge">Pro</span>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">📦</span>
+      <div class="tool-name">Dependency Auditor</div>
+      <div class="tool-desc">Real-time tracking of 2M+ packages across npm, PyPI, Maven, RubyGems, and Go modules. License compliance included.</div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🤖</span>
+      <div class="tool-name">AI Doc Generator</div>
+      <div class="tool-desc">Generates JSDoc, OpenAPI specs, README files, and architecture diagrams from your code. Stays in sync on every commit.</div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🧪</span>
+      <div class="tool-name">Test Generator</div>
+      <div class="tool-desc">AI-written unit, integration, and fuzz tests. Targets untested paths with 90%+ branch coverage on first run.</div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🕸️</span>
+      <div class="tool-name">Network Analyzer</div>
+      <div class="tool-desc">Live request tracing, latency heatmaps, and anomaly detection. Pairs with your existing APM or runs standalone.</div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🔄</span>
+      <div class="tool-name">Reverse Engineer</div>
+      <div class="tool-desc">Decompile, deobfuscate, and annotate binaries with AI. Upload ELF, PE, Wasm, or APK files directly to the dashboard.</div>
+      <span class="tool-badge">Pro</span>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="section-tag">Reviews</div>
+  <h2 class="section-title reveal">Trusted by elite engineering teams</h2>
+
+  <div class="testi-grid">
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">DevCore Pro replaced 6 separate tools. The AI code review alone found a SQL injection we'd missed in 3 previous audits. ROI in week 1.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">SK</div>
+        <div>
+          <div class="testi-name">Shen Kaito</div>
+          <div class="testi-role">Staff Security Engineer · Stripe</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">The Hacker Mode is genuinely scary-good. Ran a pentest simulation on our staging env and it found 4 critical paths our red team missed last quarter.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">AM</div>
+        <div>
+          <div class="testi-name">Anika Müller</div>
+          <div class="testi-role">Principal Engineer · Cloudflare</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">We cut our incident response time from 4 hours to 18 minutes. The zero-day scanner auto-patched log4shell across 240 services while I was asleep.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">RJ</div>
+        <div>
+          <div class="testi-name">Rafael Jiménez</div>
+          <div class="testi-role">CTO · Finova Labs</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-tag">Pricing</div>
+  <h2 class="section-title reveal" style="margin: 0 auto 60px; text-align: center; max-width: 100%;">Serious tools. Serious pricing.</h2>
+
+  <div class="pricing-grid">
+    <div class="price-card reveal">
+      <div class="price-tier">Solo</div>
+      <div class="price-amount"><span>$</span>49</div>
+      <div class="price-period">per month · 1 developer</div>
+      <ul class="price-features">
+        <li>AI Code Review (500 calls/mo)</li>
+        <li>CVE Scanner</li>
+        <li>Secret Detector</li>
+        <li>Test Generator</li>
+        <li>Doc Generator</li>
+        <li class="inactive">Hacker Mode</li>
+        <li class="inactive">Live Collab Rooms</li>
+        <li class="inactive">CI/CD Deploy Gate</li>
+        <li class="inactive">Reverse Engineer</li>
+      </ul>
+      <button class="price-btn" onclick="window.open('https://vinyan.gumroad.com/l/zpllep','_blank')">Buy Solo — $49/mo ↗</button>
+    </div>
+
+    <div class="price-card featured reveal">
+      <div class="price-tier">Pro</div>
+      <div class="price-amount"><span>$</span>99</div>
+      <div class="price-period">per month · 1 developer</div>
+      <ul class="price-features">
+        <li>Everything in Solo</li>
+        <li>Hacker Mode 🔥</li>
+        <li>Full Audit Engine</li>
+        <li>CI/CD Deploy Gate</li>
+        <li>Live Collab Rooms</li>
+        <li>Reverse Engineer</li>
+        <li>5,000 API calls/mo</li>
+        <li>Priority support</li>
+        <li>Attack surface mapping</li>
+      </ul>
+      <button class="price-btn" onclick="window.open('https://vinyan.gumroad.com/l/olybbz','_blank')">Buy Pro — $99/mo ↗</button>
+    </div>
+
+    <div class="price-card reveal">
+      <div class="price-tier">Team</div>
+      <div class="price-amount"><span>$</span>199</div>
+      <div class="price-period">per month · up to 10 seats</div>
+      <ul class="price-features">
+        <li>Everything in Pro</li>
+        <li>10 team seats</li>
+        <li>50,000 API calls/mo</li>
+        <li>Analytics dashboard</li>
+        <li>Webhook alerts</li>
+        <li>SLA support</li>
+        <li>Custom integrations</li>
+        <li>SAML SSO</li>
+        <li>Priority 1hr SLA</li>
+      </ul>
+      <button class="price-btn" onclick="window.open('https://vinyan.gumroad.com/l/usoiq','_blank')">Buy Team — $199/mo ↗</button>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2 class="reveal">Stop shipping<br><span style="background: linear-gradient(90deg, var(--accent), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip:text;">blind.</span></h2>
+  <p class="reveal">Join 12,400+ engineering teams that ship faster, safer, and smarter.</p>
+  <div class="cta-actions reveal">
+    <button class="btn-primary" onclick="window.open('https://vinyan.gumroad.com/l/zpllep','_blank')">Get Solo — $49/mo</button>
+    <button class="btn-outline" onclick="window.open('https://vinyan.gumroad.com/l/olybbz','_blank')">Get Pro — $99/mo</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">[DevCorePro]</div>
+  <ul class="footer-links">
+    <li><a href="#">Docs</a></li>
+    <li><a href="#">Blog</a></li>
+    <li><a href="#">Status</a></li>
+    <li><a href="#">Privacy</a></li>
+    <li><a href="#">Security</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 DevCore Pro Inc. SOC 2 Type II Certified.</div>
+</footer>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 6 + 'px';
+    cursor.style.top = my - 6 + 'px';
+  });
+
+  function animateRing() {
+    rx += (mx - rx - 18) * 0.12;
+    ry += (my - ry - 18) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('button, a, .feature-card, .tool-card, .testi-card, .step').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'scale(2)';
+      ring.style.width = '56px'; ring.style.height = '56px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'scale(1)';
+      ring.style.width = '36px'; ring.style.height = '36px';
+    });
+  });
+
+  // Intersection Observer for reveals
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => obs.observe(r));
+
+  // Counter animation
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.count);
+    const suffix = el.dataset.count > 1000 ? '+' : (el.dataset.count == 98 ? '%' : '');
+    let current = 0;
+    const step = target / 60;
+    const timer = setInterval(() => {
+      current += step;
+      if (current >= target) { current = target; clearInterval(timer); }
+      el.textContent = Math.floor(current).toLocaleString() + suffix;
+    }, 16);
+  }
+
+  const statObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('[data-count]').forEach(animateCounter);
+        statObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.stats-bar').forEach(s => statObs.observe(s));
+
+  // Add suffixes
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const v = parseInt(el.dataset.count);
+    if (v === 98) el.dataset.suffix = '%';
+    else if (v > 100) el.dataset.suffix = '+';
+  });
+
+  // Code tab switching
+  document.querySelectorAll('.code-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      tab.parentElement.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  // Toast notifications
+  function showToast(msg) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<span class="toast-dot"></span><span>${msg}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 4200);
+  }
+
+  // Auto toast on load
+  setTimeout(() => showToast('👋 Free trial — no credit card required'), 2000);
+</script>
+</body>
+</html>
